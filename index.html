@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JavaScript DOM</title>
+	<link rel="stylesheet" href=" https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css ">
+	<!--  Files cdn Bootstrap  -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script> 
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+ 	<style>
+ 	button.btn:focus,
+ 	textarea {
+ 		box-shadow: none !important;
+ 	}
+ 	img {
+ 		width: 100%;
+ 		margin-top: 10px;
+ 	}
+ 	</style>
+</head>
+<body>
+	<div class="container-fluid py-5">
+		<div class="container">
+			<form>
+				<div class="form-group">
+					<label for="add" class="lead text-muted">Agrega contenido</label>
+					<textarea class="form-control" rows="5" id="add" placeholder="Agrega texto y también imagenes con link o ruta"></textarea>
+				</div>
+				<button type="reset" class="btn btn-outline-primary btn-lg btn-block" id="crearParrafo">Crear parrafo</button>
+				<button type="reset" class="btn btn-outline-primary btn-lg btn-block" id="crearImagen">Crear imagen</button>
+				<button type="reset" class="btn btn-outline-primary btn-lg btn-block" id="borrarUltimo">Borrar último</button>
+				<button type="reset" class="btn btn-outline-primary btn-lg btn-block" id="borrarPrimero">Borrar Primero</button>
+				<button type="reset" class="btn btn-outline-primary btn-lg btn-block" id="SustituirPrimeroVacio">Sustituir primero por vacio</button>
+			</form>
+			<div class="my-3" id="content-error"></div>
+			<div class="my-1" id="div1"></div>
+		</div>
+	</div>
+	<script>
+	 window.addEventListener('load', inicio);
+	 function inicio() {
+	 	document.getElementById('crearParrafo').addEventListener('click', crearParrafo);
+	 	document.getElementById('crearImagen').addEventListener('click', crearImagen);
+	 	document.getElementById('borrarUltimo').addEventListener('click', borrarUltimo);
+	 	document.getElementById('borrarPrimero').addEventListener('click', borrarPrimero);
+	 	document.getElementById('SustituirPrimeroVacio').addEventListener('click', SustituirPrimeroVacio);
+
+		guardar_localStorage();
+		
+	 }
+
+	 function guardar_localStorage() {
+	 	let persona = {
+	 		nombre: 'Kevin',
+	 		edad: '17',
+	 		coords: {
+	 			lat: 10,
+	 			lng: -10
+	 		}
+	 	}
+
+	 	let person = 'kevin parra'
+
+	 	localStorage.setItem("me", JSON.stringify(person));
+	 }
+
+	 // Funcion para crear una alerta 
+	 function contentAlert(location, type, text){
+	 	// Contenedor alerta de bootstrap 
+	 	var Error = document.createElement('div');
+	 	// Añadiendo atributos 
+	 	Error.setAttribute('class', 'alert alert-'+type+'');
+	 	// Creado texto para la alerta 
+	 	var text = document.createTextNode(text);
+	 	// Añadir texto al contenedor
+	 	Error.appendChild(text);
+	 	// Crar icono de close 
+	 	var icon = document.createElement('i');
+	 	icon.setAttribute('class', 'fa fa-close close')
+	 	icon.setAttribute('data-dismiss', 'alert');
+	 	icon.setAttribute('aria-label', 'close');
+	 	Error.appendChild(icon);
+
+	 	// Añadiendo el Error al documento
+	 	location.appendChild(Error);
+
+	 }
+
+	 function crearParrafo() {
+	 	// Entrada del textarea 
+	 	var textoEntrante = document.getElementById('add');
+	 	// Crear elemento 
+	 	var parrafo = document.createElement('p');
+	 	// Crear texto
+	 	var texto = document.createTextNode(textoEntrante.value);
+	 	parrafo.appendChild(texto);
+
+	 	// Añadir atributos
+	 	parrafo.setAttribute('class', 'lead text-muted');
+
+	 	// Añadiendo el parrafo creado al id div1
+	 	var cont = document.getElementById('div1');
+	 	var contentError = document.getElementById('content-error');
+	 	if (textoEntrante.value == '') {
+	 		contentAlert(contentError, 'danger', 'Ingrese texto');
+	 	}
+	 	cont.appendChild(parrafo);
+	 }
+
+	 function crearImagen() {
+	 	// Entrada del textarea 
+	 	var imagenEntrante = document.getElementById('add');
+	 	// Crear imagen 
+	 	var imagen = document.createElement('img');
+
+	 	var ruta = imagenEntrante.value;
+	 	// Añadir atributos 
+	 	imagen.setAttribute('src', ruta);
+	 	 imagen.alt = 'no existe imagen';
+
+	 	var cont = document.getElementById('div1');
+	 	var contentError = document.getElementById('content-error');
+	 	if (imagenEntrante.value == '') {
+	 		contentAlert(contentError, 'danger', 'Ingrese imagen');
+	 	}
+	 	else {
+	 		cont.appendChild(imagen);
+	 	}
+	 }
+
+	 function borrarUltimo() {
+	 	var cont = document.getElementById('div1');
+	 	// Seleccionar el último hijo 
+	 	var hijo = cont.lastChild;
+
+	 	// Borrar el último hijo
+	 	cont.removeChild(hijo);
+	 }
+
+	 function borrarPrimero() {
+	 	var cont = document.getElementById('div1');
+	 	// Seleccionar el primer hijo 
+	 	var hijo = cont.firstChild;
+
+	 	// Borrar el primer hijo 
+	 	cont.removeChild(hijo);
+	 }
+
+	 function SustituirPrimeroVacio() {
+	 	var cont = document.getElementById('div1');
+	 	// Creando parrafo 
+	 	var parrafo = document.createElement('p');
+	 	// Creando texto 
+	 	var texto = document.createTextNode('Vacio');
+	 	// Añadiendo texto al parrafo
+	 	parrafo.appendChild(texto);
+
+	 	// Sustituir hijo 
+	 	cont.replaceChild(parrafo, cont.firstChild);
+
+	 }
+
+
+	</script>
+</body>
+</html>
